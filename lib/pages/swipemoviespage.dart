@@ -4,7 +4,7 @@ import 'package:flutter_tindercard/flutter_tindercard.dart';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:transparent_image/transparent_image.dart';
 
-import 'models/movie.dart';
+import '../models/movie.dart';
 
 class SwipeMoviesPage extends StatefulWidget {
   SwipeMoviesPage({Key key, this.title}) : super(key: key);
@@ -17,6 +17,7 @@ class SwipeMoviesPage extends StatefulWidget {
 
 class _SwipeMoviesPageState extends State<SwipeMoviesPage> {
   List<Movie> movies = [];
+  final String baseImageUrl = "http://image.tmdb.org/t/p/w500/";
 
   @override
   void initState() {
@@ -38,10 +39,9 @@ class _SwipeMoviesPageState extends State<SwipeMoviesPage> {
   Later, replace this method with a real API call
   */
   Future<List<Movie>> loadMovies() async {
-    await wait(3);
     String jsonString = await _loadAMoviesAsset();
     final jsonResponse = json.decode(jsonString);
-    final List<dynamic> items = jsonResponse['ITEMS'];
+    final List<dynamic> items = jsonResponse['results'];
     final moviesList = items.map((e) => Movie.fromJson(e)).toList();
     return moviesList;
   }
@@ -53,10 +53,14 @@ class _SwipeMoviesPageState extends State<SwipeMoviesPage> {
   @override
   Widget build(BuildContext context) {
     if (this.movies.length == 0)
-      return Scaffold(body: Center(child: CircularProgressIndicator()));
+      return Scaffold(
+          backgroundColor: Theme.of(context).primaryColorLight,
+          body: Center(
+              child: CircularProgressIndicator(
+                  backgroundColor: Theme.of(context).primaryColor)));
     CardController controller;
-    return new Scaffold(
-      body: new Center(
+    return new Container(
+      child: new Center(
         child: Container(
           height: MediaQuery.of(context).size.height * 0.70,
           child: new TinderSwapCard(
@@ -77,11 +81,8 @@ class _SwipeMoviesPageState extends State<SwipeMoviesPage> {
                 children: [
                   FadeInImage.memoryNetwork(
                     placeholder: kTransparentImage,
-                    image: this.movies.elementAt(index).img,
-                  ),
-                  Text(
-                    this.movies.elementAt(index).name,
-                    style: TextStyle(color: Colors.red, fontSize: 20),
+                    image: this.baseImageUrl +
+                        this.movies.elementAt(index).posterPath,
                   )
                 ],
               ),
