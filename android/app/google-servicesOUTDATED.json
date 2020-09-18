@@ -15,14 +15,6 @@
       },
       "oauth_client": [
         {
-          "client_id": "247933389436-f10chhts4r5qdq9ieumnv49di2coov2n.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.moviematch.moviematch",
-            "certificate_hash": "08a5a89a004298e540e7db7c939d654a270e270a"
-          }
-        },
-        {
           "client_id": "247933389436-ei2kl6k8ga3lpf6udohookb5k3cqi401.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {

@@ -1,5 +1,6 @@
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
+import 'package:swipecards/pages/settingspage.dart';
 import 'package:swipecards/pages/swipemoviespage.dart';
 
 import 'groupspage.dart';
@@ -11,7 +12,7 @@ class RootPage extends StatefulWidget {
 
 class _RootPageState extends State<RootPage> {
   Color primaryColor = Color(0xFFF46036);
-  Color secondaryColor = Colors.indigo[900];
+  Color secondaryColor = Colors.grey[900];
   PageController _pageController;
   int _page = 2;
 
@@ -51,7 +52,7 @@ class _RootPageState extends State<RootPage> {
           animationCurve: this.animationCurve,
           items: <Widget>[
             Icon(Icons.group, size: 30),
-            Icon(Icons.redo, size: 30),
+            Image.asset("assets/match-icon.png", width: 26),
             Icon(Icons.settings, size: 30),
           ],
           onTap: _onItemTapped),
@@ -65,7 +66,7 @@ class _RootPageState extends State<RootPage> {
           children: <Widget>[
             GroupsPage(),
             SwipeMoviesPage(),
-            Text("third"),
+            SettingsPage(),
           ],
         ),
       ),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:swipecards/pages/authpage.dart';
 import 'package:swipecards/pages/rootpage.dart';
 import 'package:get_it/get_it.dart';
@@ -12,6 +13,7 @@ void setupLocator() {
 void main() {
   setupLocator();
   runApp(MyApp());
+  SystemChrome.setEnabledSystemUIOverlays([SystemUiOverlay.bottom]);
 }
 
 class MyApp extends StatefulWidget {
@@ -21,10 +23,10 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   Color primaryColor = Color(0xFFF46036);
-  Color secondaryColor = Colors.indigo[900];
+  Color secondaryColor = Colors.grey[900];
 
-  Curve animationCurve = Curves.easeInCubic;
-  int animationDuration = 200;
+  Curve animationCurve = Curves.linear;
+  int animationDuration = 100;
 
   @override
   void initState() {
@@ -50,6 +52,8 @@ class _MyAppState extends State<MyApp> {
           switch (routeSettings.name) {
             case 'login':
               return MaterialPageRoute(builder: (context) => AuthPage());
+            case 'root':
+              return MaterialPageRoute(builder: (context) => RootPage());
             default:
               return MaterialPageRoute(builder: (context) => AuthPage());
           }
