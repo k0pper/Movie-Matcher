@@ -2,6 +2,7 @@ import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:swipecards/pages/authpage.dart';
 import 'package:swipecards/pages/groupspage.dart';
+import 'package:swipecards/pages/rootpage.dart';
 import 'package:swipecards/pages/swipemoviespage.dart';
 
 void main() {
@@ -52,36 +53,6 @@ class _MyAppState extends State<MyApp> {
           primaryColor: primaryColor,
           primaryColorLight: secondaryColor,
         ),
-        home: AuthPage()
-        // home: Scaffold(
-        //   backgroundColor: secondaryColor,
-        //   bottomNavigationBar: CurvedNavigationBar(
-        //       index: 1,
-        //       height: 50,
-        //       backgroundColor: secondaryColor,
-        //       animationDuration: Duration(milliseconds: this.animationDuration),
-        //       animationCurve: this.animationCurve,
-        //       items: <Widget>[
-        //         Icon(Icons.group, size: 30),
-        //         Icon(Icons.redo, size: 30),
-        //         Icon(Icons.settings, size: 30),
-        //       ],
-        //       onTap: _onItemTapped),
-        //   body: SizedBox.expand(
-        //     child: PageView(
-        //       physics: NeverScrollableScrollPhysics(),
-        //       controller: _pageController,
-        //       onPageChanged: (index) {
-        //         setState(() => this._page = index);
-        //       },
-        //       children: <Widget>[
-        //         GroupsPage(),
-        //         SwipeMoviesPage(),
-        //         Text("third"),
-        //       ],
-        //     ),
-        //   ),
-        // )
-        );
+        home: RootPage());
   }
 }

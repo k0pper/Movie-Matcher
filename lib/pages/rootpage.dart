@@ -4,18 +4,18 @@ import 'package:swipecards/pages/swipemoviespage.dart';
 
 import 'groupspage.dart';
 
-class MainPage extends StatefulWidget {
+class RootPage extends StatefulWidget {
   @override
-  _MainPageState createState() => _MainPageState();
+  _RootPageState createState() => _RootPageState();
 }
 
-class _MainPageState extends State<MainPage> {
+class _RootPageState extends State<RootPage> {
   Color primaryColor = Color(0xFFF46036);
   Color secondaryColor = Colors.indigo[900];
   PageController _pageController;
   int _page = 2;
 
-  Curve animationCurve = Curves.easeInCubic;
+  Curve animationCurve = Curves.linear;
   int animationDuration = 200;
 
   @override
