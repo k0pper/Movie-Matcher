@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:swipecards/pages/authpage.dart';
+import 'package:swipecards/pages/creategroup/addpeople.dart';
 import 'package:swipecards/pages/rootpage.dart';
 import 'package:get_it/get_it.dart';
 import 'package:swipecards/services/nav.dart';
@@ -54,6 +55,8 @@ class _MyAppState extends State<MyApp> {
               return MaterialPageRoute(builder: (context) => AuthPage());
             case 'root':
               return MaterialPageRoute(builder: (context) => RootPage());
+            case 'addPeople':
+              return MaterialPageRoute(builder: (context) => AddPeople());
             default:
               return MaterialPageRoute(builder: (context) => AuthPage());
           }

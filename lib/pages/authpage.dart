@@ -11,6 +11,7 @@ class _AuthPageState extends State<AuthPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.grey[900],
       body: Center(
         child: SizedBox(
           width: MediaQuery.of(context).size.width * 0.65,
@@ -18,9 +19,9 @@ class _AuthPageState extends State<AuthPage> {
             Text(
               "Connect Your Account",
               style: TextStyle(
-                  color: Theme.of(context).primaryColorLight,
+                  color: Colors.white,
                   fontSize: 32,
-                  fontWeight: FontWeight.w300),
+                  fontWeight: FontWeight.w200),
               textAlign: TextAlign.center,
             ),
             SizedBox(height: 15),
@@ -51,7 +52,7 @@ class _AuthPageState extends State<AuthPage> {
             ]),
             SizedBox(height: 10),
             Text("Create new Account with your Email",
-                style: TextStyle(color: Colors.indigo[900]))
+                style: TextStyle(color: Colors.white))
           ]),
         ),
       ),

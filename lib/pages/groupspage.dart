@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:swipecards/main.dart';
+import 'package:swipecards/services/nav.dart';
 import 'package:swipecards/widgets/groupthumbnail.dart';
 
 class GroupsPage extends StatefulWidget {
@@ -14,7 +16,9 @@ class _GroupsPageState extends State<GroupsPage> {
         elevation: 10,
         backgroundColor: Colors.red,
         child: Icon(Icons.add),
-        onPressed: () {},
+        onPressed: () {
+          locator<NavigationService>().navigateTo('addPeople');
+        },
       ),
       backgroundColor: Colors.grey[900],
       body: Container(

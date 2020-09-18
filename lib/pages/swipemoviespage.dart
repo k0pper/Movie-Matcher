@@ -111,31 +111,36 @@ class _SwipeMoviesPageState extends State<SwipeMoviesPage> {
               cardBuilder: (context, index) {
                 print(index);
                 return Card(
-                  child: Stack(
-                    alignment: Alignment.center,
-                    children: [
-                      FadeInImage.memoryNetwork(
-                        placeholder: kTransparentImage,
-                        image: this.baseImageUrl +
-                            this.movies.elementAt(index).posterPath,
-                      ),
-                      Opacity(
-                        opacity: this.likeOpacity,
-                        child: Text("LIKE",
-                            style: TextStyle(
-                                fontSize: 48,
-                                fontWeight: FontWeight.w700,
-                                color: Colors.green)),
-                      ),
-                      Opacity(
-                        opacity: this.dislikeOpacity,
-                        child: Text("DISLIKE",
-                            style: TextStyle(
-                                fontSize: 48,
-                                fontWeight: FontWeight.w700,
-                                color: Colors.red)),
-                      ),
-                    ],
+                  child: GestureDetector(
+                    onTapUp: (tapUpDetails) {
+                      print(tapUpDetails);
+                    },
+                    child: Stack(
+                      alignment: Alignment.center,
+                      children: [
+                        FadeInImage.memoryNetwork(
+                          placeholder: kTransparentImage,
+                          image: this.baseImageUrl +
+                              this.movies.elementAt(index).posterPath,
+                        ),
+                        Opacity(
+                          opacity: this.likeOpacity,
+                          child: Text("LIKE",
+                              style: TextStyle(
+                                  fontSize: 48,
+                                  fontWeight: FontWeight.w700,
+                                  color: Colors.green)),
+                        ),
+                        Opacity(
+                          opacity: this.dislikeOpacity,
+                          child: Text("DISLIKE",
+                              style: TextStyle(
+                                  fontSize: 48,
+                                  fontWeight: FontWeight.w700,
+                                  color: Colors.red)),
+                        ),
+                      ],
+                    ),
                   ),
                 );
               },
