@@ -1,7 +1,11 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/services.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:rxdart/rxdart.dart';
+
+import '../main.dart';
+import 'nav.dart';
 
 class AuthService {
   final GoogleSignIn _googleSignIn = GoogleSignIn();
@@ -44,9 +48,10 @@ class AuthService {
       updateUserData(user);
       print("user name: ${user.displayName}");
       loading.add(false);
-
       return user;
     } catch (error) {
+      print("ERROR");
+      print(error);
       return error;
     }
   }

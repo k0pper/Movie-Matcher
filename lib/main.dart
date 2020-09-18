@@ -1,11 +1,16 @@
-import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:swipecards/pages/authpage.dart';
-import 'package:swipecards/pages/groupspage.dart';
 import 'package:swipecards/pages/rootpage.dart';
-import 'package:swipecards/pages/swipemoviespage.dart';
+import 'package:get_it/get_it.dart';
+import 'package:swipecards/services/nav.dart';
+
+GetIt locator = GetIt();
+void setupLocator() {
+  locator.registerLazySingleton(() => NavigationService());
+}
 
 void main() {
+  setupLocator();
   runApp(MyApp());
 }
 
@@ -17,8 +22,6 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   Color primaryColor = Color(0xFFF46036);
   Color secondaryColor = Colors.indigo[900];
-  PageController _pageController;
-  int _page = 2;
 
   Curve animationCurve = Curves.easeInCubic;
   int animationDuration = 200;
@@ -26,22 +29,11 @@ class _MyAppState extends State<MyApp> {
   @override
   void initState() {
     super.initState();
-    _pageController = PageController(initialPage: 1);
   }
 
   @override
   void dispose() {
-    _pageController.dispose();
     super.dispose();
-  }
-
-  void _onItemTapped(int index) {
-    setState(() {
-      this._page = index;
-      _pageController.animateToPage(index,
-          duration: Duration(milliseconds: this.animationDuration),
-          curve: this.animationCurve);
-    });
   }
 
   @override
@@ -53,6 +45,15 @@ class _MyAppState extends State<MyApp> {
           primaryColor: primaryColor,
           primaryColorLight: secondaryColor,
         ),
-        home: RootPage());
+        navigatorKey: locator<NavigationService>().navigatorKey,
+        onGenerateRoute: (routeSettings) {
+          switch (routeSettings.name) {
+            case 'login':
+              return MaterialPageRoute(builder: (context) => AuthPage());
+            default:
+              return MaterialPageRoute(builder: (context) => AuthPage());
+          }
+        },
+        home: AuthPage());
   }
 }
