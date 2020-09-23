@@ -2,8 +2,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:rxdart/rxdart.dart';
-import 'package:swipecards/main.dart';
-import 'package:swipecards/services/nav.dart';
 
 class AuthService {
   final GoogleSignIn _googleSignIn = GoogleSignIn();
@@ -64,6 +62,10 @@ class AuthService {
       'displayName': user.displayName,
       'lastSeen': DateTime.now()
     }, merge: true);
+  }
+
+  Future<FirebaseUser> getCurrentUser() async {
+    return _auth.currentUser();
   }
 
   Future<String> signOut() async {

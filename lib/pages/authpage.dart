@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:swipecards/widgets/facebooksigninbutton.dart';
+import 'package:swipecards/services/auth.dart';
+import 'package:swipecards/services/nav.dart';
 import 'package:swipecards/widgets/googlesigninbutton.dart';
+import 'package:swipecards/main.dart';
 
 class AuthPage extends StatefulWidget {
   @override
@@ -8,6 +10,14 @@ class AuthPage extends StatefulWidget {
 }
 
 class _AuthPageState extends State<AuthPage> {
+  @override
+  void initState() {
+    super.initState();
+    authService.getCurrentUser().then((currentUser) {
+      if (currentUser != null) locator<NavigationService>().navigateTo('root');
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -17,7 +27,7 @@ class _AuthPageState extends State<AuthPage> {
           width: MediaQuery.of(context).size.width * 0.65,
           child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
             Text(
-              "Connect Your Account",
+              "Sign Into Your Account",
               style: TextStyle(
                   color: Colors.white,
                   fontSize: 32,
@@ -26,7 +36,6 @@ class _AuthPageState extends State<AuthPage> {
             ),
             SizedBox(height: 15),
             GoogleSignInButton(),
-            // FacebookSignInButton(),
             SizedBox(height: 10),
             Row(children: <Widget>[
               Expanded(
@@ -51,7 +60,8 @@ class _AuthPageState extends State<AuthPage> {
               ),
             ]),
             SizedBox(height: 10),
-            Text("Create new Account with your Email",
+            Text("Sign In or Create Account with Your E-Mail Address",
+                textAlign: TextAlign.center,
                 style: TextStyle(color: Colors.white))
           ]),
         ),

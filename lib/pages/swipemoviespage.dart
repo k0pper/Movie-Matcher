@@ -1,9 +1,12 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'package:flutter_tindercard/flutter_tindercard.dart';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:transparent_image/transparent_image.dart';
-
+import 'package:percent_indicator/percent_indicator.dart';
+import 'package:auto_size_text/auto_size_text.dart';
 import '../models/movie.dart';
 
 class SwipeMoviesPage extends StatefulWidget {
@@ -16,8 +19,10 @@ class SwipeMoviesPage extends StatefulWidget {
 }
 
 class _SwipeMoviesPageState extends State<SwipeMoviesPage> {
-  List<Movie> movies = [];
-  final String baseImageUrl = "http://image.tmdb.org/t/p/w500/";
+  List<Movie> moviesInStack = [];
+  final String baseImageUrl = "http://image.tmdb.org/t/p/w300//";
+  CardController controller;
+  Movie movieOnTop;
 
   double likeOpacity = 0;
   double dislikeOpacity = 0;
@@ -25,9 +30,10 @@ class _SwipeMoviesPageState extends State<SwipeMoviesPage> {
   @override
   void initState() {
     this.loadMovies().then((movies) {
-      print("Movies loaded");
       setState(() {
-        this.movies = movies;
+        this.moviesInStack = movies;
+        this.movieOnTop = this.moviesInStack[0];
+        print(this.movieOnTop.name);
       });
     });
     super.initState();
@@ -53,7 +59,7 @@ class _SwipeMoviesPageState extends State<SwipeMoviesPage> {
     return new Future.delayed(Duration(seconds: seconds), () => {});
   }
 
-  void updateLikeOpacity(double x) {
+  void _updateLikeOpacity(double x) {
     setState(() {
       if (x == 0) {
         this.likeOpacity = 0;
@@ -66,7 +72,7 @@ class _SwipeMoviesPageState extends State<SwipeMoviesPage> {
     });
   }
 
-  void updateDislikeOpacity(double x) {
+  void _updateDislikeOpacity(double x) {
     setState(() {
       if (x == 0) {
         this.dislikeOpacity = 0;
@@ -79,93 +85,169 @@ class _SwipeMoviesPageState extends State<SwipeMoviesPage> {
     });
   }
 
+  Color _getRatingColor(double movieRating) {
+    return Color.lerp(
+        Colors.red[300], Colors.lightGreenAccent, movieRating / 10);
+  }
+
+  void _syncMovieArrayWithCardStack(int index) {
+    Movie swipedMovie = this.moviesInStack.elementAt(index);
+    this.movieOnTop = this.moviesInStack[index + 1];
+    this
+        .moviesInStack
+        .removeWhere((element) => element.name == swipedMovie.name);
+    print(this.movieOnTop.name);
+  }
+
+  void onSwipeComplete(CardSwipeOrientation orientation, int index) {
+    if ([CardSwipeOrientation.RIGHT, CardSwipeOrientation.LEFT]
+        .contains(orientation)) {
+      this.likeOpacity = 0;
+      this.dislikeOpacity = 0;
+      setState(() {
+        this._syncMovieArrayWithCardStack(index);
+      });
+    }
+    if (orientation == CardSwipeOrientation.RECOVER) {
+      this.likeOpacity = 0;
+      this.dislikeOpacity = 0;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    if (this.movies.length == 0)
+    if (this.moviesInStack.length == 0)
       return Scaffold(
           backgroundColor: Theme.of(context).primaryColorLight,
           body: Center(
               child: CircularProgressIndicator(
                   backgroundColor: Theme.of(context).primaryColor)));
-    CardController controller;
+
     return new Container(
-      child: new Center(
-        child: Container(
-          height: MediaQuery.of(context).size.height * 0.70,
-          child: GestureDetector(
-            onTapUp: (tapUpDetails) {
-              print(tapUpDetails);
-            },
-            child: TinderSwapCard(
-              animDuration: 200,
-              swipeUp: false,
-              swipeDown: false,
-              orientation: AmassOrientation.BOTTOM,
-              totalNum: this.movies.length,
-              stackNum: 6,
-              swipeEdge: 5.0,
-              maxWidth: MediaQuery.of(context).size.width * 0.9,
-              maxHeight: MediaQuery.of(context).size.width * 0.9,
-              minWidth: MediaQuery.of(context).size.width * 0.8,
-              minHeight: MediaQuery.of(context).size.width * 0.8,
-              cardBuilder: (context, index) {
-                print(index);
-                return Card(
-                  child: GestureDetector(
-                    onTapUp: (tapUpDetails) {
-                      print(tapUpDetails);
-                    },
-                    child: Stack(
-                      alignment: Alignment.center,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            padding: EdgeInsets.fromLTRB(20, 20, 20, 0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        FadeInImage.memoryNetwork(
-                          placeholder: kTransparentImage,
-                          image: this.baseImageUrl +
-                              this.movies.elementAt(index).posterPath,
+                        SizedBox(
+                          width: MediaQuery.of(context).size.width * 0.7,
+                          child: AutoSizeText(
+                            this.movieOnTop.name,
+                            style: TextStyle(fontSize: 32, color: Colors.white),
+                            maxLines: 1,
+                          ),
                         ),
-                        Opacity(
-                          opacity: this.likeOpacity,
-                          child: Text("LIKE",
-                              style: TextStyle(
-                                  fontSize: 48,
-                                  fontWeight: FontWeight.w700,
-                                  color: Colors.green)),
-                        ),
-                        Opacity(
-                          opacity: this.dislikeOpacity,
-                          child: Text("DISLIKE",
-                              style: TextStyle(
-                                  fontSize: 48,
-                                  fontWeight: FontWeight.w700,
-                                  color: Colors.red)),
-                        ),
+                        Text(this.movieOnTop.releaseDate,
+                            style:
+                                TextStyle(fontSize: 12, color: Colors.white)),
                       ],
                     ),
-                  ),
-                );
-              },
-              cardController: controller = CardController(),
-              swipeUpdateCallback:
-                  (DragUpdateDetails details, Alignment align) {
-                if (align.x < 0) this.updateDislikeOpacity(align.x);
-                if (align.x > 0) this.updateLikeOpacity(align.x);
-              },
-              swipeCompleteCallback:
-                  (CardSwipeOrientation orientation, int index) {
-                print(this.movies.elementAt(index).name);
-                if ([CardSwipeOrientation.RIGHT, CardSwipeOrientation.LEFT]
-                    .contains(orientation)) {
-                  this.likeOpacity = 0;
-                  this.dislikeOpacity = 0;
-                }
-                if (orientation == CardSwipeOrientation.RECOVER) {
-                  this.likeOpacity = 0;
-                  this.dislikeOpacity = 0;
-                }
-              },
+                    CircularPercentIndicator(
+                      radius: 60.0,
+                      lineWidth: 5.0,
+                      percent: this.movieOnTop.rating / 10,
+                      center: Text(
+                        this.movieOnTop.rating.toString(),
+                        style: TextStyle(color: Colors.white),
+                      ),
+                      progressColor: _getRatingColor(this.movieOnTop.rating),
+                      backgroundColor: Colors.grey[800].withOpacity(0.5),
+                    )
+                  ],
+                ),
+              ],
             ),
           ),
-        ),
+          Container(
+            height: MediaQuery.of(context).size.height * 0.70,
+            child: GestureDetector(
+              onTapUp: (tapUpDetails) {
+                print(tapUpDetails);
+              },
+              child: TinderSwapCard(
+                animDuration: 200,
+                swipeUp: false,
+                swipeDown: false,
+                orientation: AmassOrientation.BOTTOM,
+                totalNum: this.moviesInStack.length,
+                stackNum: 6,
+                swipeEdge: 5.0,
+                maxWidth: MediaQuery.of(context).size.width * 0.9,
+                maxHeight: MediaQuery.of(context).size.width * 0.9,
+                minWidth: MediaQuery.of(context).size.width * 0.8,
+                minHeight: MediaQuery.of(context).size.width * 0.8,
+                cardBuilder: (context, index) {
+                  return Card(
+                    child: GestureDetector(
+                      onTapUp: (tapUpDetails) {
+                        print(tapUpDetails);
+                      },
+                      child: Stack(
+                        alignment: Alignment.center,
+                        children: [
+                          Container(
+                            decoration: BoxDecoration(
+                                image: DecorationImage(
+                                    fit: BoxFit.cover,
+                                    image: NetworkImage(this.baseImageUrl +
+                                        moviesInStack
+                                            .elementAt(index)
+                                            .backdropPath))),
+                            child: ClipRect(
+                              child: BackdropFilter(
+                                filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
+                                child: Container(
+                                  color: Colors.black.withOpacity(0),
+                                ),
+                              ),
+                            ),
+                          ),
+                          FadeInImage.memoryNetwork(
+                            placeholder: kTransparentImage,
+                            image: this.baseImageUrl +
+                                this.moviesInStack.elementAt(index).posterPath,
+                          ),
+                          Opacity(
+                            opacity: this.likeOpacity,
+                            child: Text("LIKE",
+                                style: TextStyle(
+                                    fontSize: 48,
+                                    fontWeight: FontWeight.w700,
+                                    color: Colors.green)),
+                          ),
+                          Opacity(
+                            opacity: this.dislikeOpacity,
+                            child: Text("DISLIKE",
+                                style: TextStyle(
+                                    fontSize: 48,
+                                    fontWeight: FontWeight.w700,
+                                    color: Colors.red)),
+                          ),
+                        ],
+                      ),
+                    ),
+                  );
+                },
+                cardController: controller = CardController(),
+                swipeUpdateCallback:
+                    (DragUpdateDetails details, Alignment align) {
+                  if (align.x < 0) this._updateDislikeOpacity(align.x);
+                  if (align.x > 0) this._updateLikeOpacity(align.x);
+                },
+                swipeCompleteCallback: onSwipeComplete,
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }

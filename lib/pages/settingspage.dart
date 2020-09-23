@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:swipecards/widgets/googlesigninbutton.dart';
 
 class SettingsPage extends StatefulWidget {
   @override
@@ -6,6 +7,12 @@ class SettingsPage extends StatefulWidget {
 }
 
 class _SettingsPageState extends State<SettingsPage> {
+  @override
+  void initState() {
+    print("initState Setingspge");
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -27,7 +34,8 @@ class _SettingsPageState extends State<SettingsPage> {
                   fontSize: 20,
                   fontWeight: FontWeight.w300),
             ),
-            SizedBox(height: 6)
+            SizedBox(height: 6),
+            GoogleSignOutButton()
           ],
         ));
   }

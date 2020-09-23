@@ -14,7 +14,6 @@ class _RootPageState extends State<RootPage> {
   Color primaryColor = Color(0xFFF46036);
   Color secondaryColor = Colors.grey[900];
   PageController _pageController;
-  int _page = 2;
 
   Curve animationCurve = Curves.linear;
   int animationDuration = 200;
@@ -33,7 +32,6 @@ class _RootPageState extends State<RootPage> {
 
   void _onItemTapped(int index) {
     setState(() {
-      this._page = index;
       _pageController.animateToPage(index,
           duration: Duration(milliseconds: this.animationDuration),
           curve: this.animationCurve);
@@ -60,9 +58,7 @@ class _RootPageState extends State<RootPage> {
         child: PageView(
           physics: NeverScrollableScrollPhysics(),
           controller: _pageController,
-          onPageChanged: (index) {
-            setState(() => this._page = index);
-          },
+          onPageChanged: (index) {},
           children: <Widget>[
             GroupsPage(),
             SwipeMoviesPage(),

@@ -43,18 +43,20 @@ class GoogleSignInButton extends StatelessWidget {
 }
 
 class GoogleSignOutButton extends StatelessWidget {
-  void signOut() {
-    authService.signOut();
+  void signOut() async {
+    await authService.signOut();
     locator<NavigationService>().navigateTo('login');
   }
 
   @override
   Widget build(BuildContext context) {
-    return RaisedButton(
-        child: Text("Click To Sign Out",
-            textAlign: TextAlign.center,
-            style: TextStyle(fontWeight: FontWeight.w300, fontSize: 15)),
-        onPressed: () => this.signOut(),
-        color: Colors.white);
+    return Container(
+      child: RaisedButton(
+          child: Text("Click To Sign Out",
+              textAlign: TextAlign.center,
+              style: TextStyle(fontWeight: FontWeight.w300, fontSize: 15)),
+          onPressed: () => this.signOut(),
+          color: Colors.white),
+    );
   }
 }
