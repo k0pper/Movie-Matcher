@@ -81,6 +81,7 @@ class _AddPeopleState extends State<AddPeople> {
                       hintStyle: TextStyle(color: Colors.grey[800])),
                 ),
               ),
+              SizedBox(height: 10),
               Container(
                 child: StreamBuilder(
                   stream: Firestore.instance.collection('users').snapshots(),
